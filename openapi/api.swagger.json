@@ -1,0 +1,1956 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "BSX REST API",
+    "version": "1.0",
+    "contact": {
+      "name": "BSX Exchange Developer Support",
+      "email": "dev@bsx.exchange"
+    }
+  },
+  "tags": [
+    {
+      "name": "BSXApiService"
+    },
+    {
+      "name": "OrderService"
+    },
+    {
+      "name": "AccountService"
+    },
+    {
+      "name": "AdminService"
+    },
+    {
+      "name": "MarketService"
+    },
+    {
+      "name": "PointService"
+    }
+  ],
+  "host": "api.testnet.bsx.exchange",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/chain/configs": {
+      "get": {
+        "summary": "Get current chain configs",
+        "description": "Get current chain configs",
+        "operationId": "AdminService_GetChainConfigs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetChainConfigsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/deposit-test-token": {
+      "post": {
+        "summary": "Deposit test token",
+        "description": "Credit $5000 USDC in test tokens to the authenticated address for each API call on the dev/testnet, with a limit of one call per address per day.\n\n*Requires authentication.*",
+        "operationId": "depositTestToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiDepositTestTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "faucet",
+            "description": "If true, the faucet will be used to deposit test token. Otherwise, the test token will be deposited from the exchange's wallet",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": "false"
+          }
+        ],
+        "tags": [
+          "Transfers"
+        ]
+      }
+    },
+    "/order": {
+      "delete": {
+        "summary": "Cancel an order",
+        "description": "Cancel an open order by `{id}` or `{nonce}`.\n\n*Requires authentication.*",
+        "operationId": "cancelOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCancelOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "description": "Order ID to be canceled",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "description": "Order nonce to be canceled",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/order-history": {
+      "get": {
+        "summary": "Get order history",
+        "description": "Get order history.\n\n*Requires authentication.*",
+        "operationId": "getOrderHistory",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/apiOrder"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "description": "Filter results by a product_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "description": "Filter by minimum posted UNIX timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64",
+            "default": "1675036800000000000"
+          },
+          {
+            "name": "end_time",
+            "description": "Filter by maximum posted UNIX timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64",
+            "default": "1675036800000000000"
+          },
+          {
+            "name": "limit",
+            "description": "Limit on number of results.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64",
+            "default": "100"
+          },
+          {
+            "name": "statuses",
+            "description": "bsx.v1.shared.MarketType market_type = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {\n   description: \"Market type. SPOT or PERPS\"\n   default: \"SPOT\"\n }];\n\nFilter results by order status.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "OPEN",
+                "DONE"
+              ]
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "List all open orders",
+        "description": "Get all of your open orders.\n\n*Requires authentication.*",
+        "operationId": "getOrders",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/apiOrder"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "description": "Filter results by a product_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "ETH-PERP"
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      },
+      "delete": {
+        "summary": "Cancel multiple orders",
+        "description": "Bulk cancel orders using one of product_ids, order_ids or nonces.\n\n*Requires authentication.*",
+        "operationId": "cancelOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCancelOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCancelOrdersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      },
+      "post": {
+        "summary": "Create an order",
+        "description": "Create an order. Two possible order types: limit and market.\n\n*Requires authentication.*",
+        "operationId": "OrderService_PostOrder",
+        "responses": {
+          "200": {
+            "description": "The order that was created",
+            "schema": {
+              "$ref": "#/definitions/apiOrder",
+              "description": "The order that was created"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiPostOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders/all": {
+      "delete": {
+        "summary": "Cancel all open orders",
+        "description": "Cancel all open orders *with best effort*. You can optionally specify the product to cancel only orders for that product\n\n*Requires authentication.*",
+        "operationId": "cancelAllOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCancelAllOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "description": "Product to delete orders.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "ETH-PERP"
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/orders/{order_id}": {
+      "get": {
+        "summary": "Get an order",
+        "description": "Retrieve a single order by `{id}`.\n\n*Requires authentication.*",
+        "operationId": "getOrder",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/apiOrder"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "description": "`order_id` is the assigned ID of the order.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/portfolio/detail": {
+      "get": {
+        "summary": "Get portfolio details",
+        "description": "Get your portfolio details including balances, total PnL, etc.\n\n*Requires authentication.*",
+        "operationId": "getPortfolioDetails",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetPortfolioDetailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get the list of all markets on BSX.",
+        "description": "Get the list of all markets on BSX.",
+        "operationId": "getProducts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetProductsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "security": []
+      }
+    },
+    "/products/{product_id}/book": {
+      "get": {
+        "summary": "Get the L2 order book.",
+        "description": "Get the L2 order book.",
+        "operationId": "getBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "description": "`product_id` of the requested order book.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "default": "ETH-PERP"
+          }
+        ],
+        "tags": [
+          "Products"
+        ],
+        "security": []
+      }
+    },
+    "/products/{product_id}/funding-rate": {
+      "get": {
+        "summary": "Get historical data of funding rate on BSX.",
+        "description": "Get historical data of funding rate on BSX.",
+        "operationId": "getFundingRate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetFundingRateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "description": "in nanosecond, if not set, it will use now() - 24 hour",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "to",
+            "description": "in nanosecond, if not set, it will use now()",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Products"
+        ],
+        "security": []
+      }
+    },
+    "/trade-history": {
+      "get": {
+        "summary": "Get trade history of an account.",
+        "description": "Get trade history of an account. Limit to 1000 records\n\n*Requires authentication.*",
+        "operationId": "getAccountTradeHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetAccountTradeHistoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "page",
+            "description": "Page number, default to 1",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64",
+            "default": "1"
+          },
+          {
+            "name": "limit",
+            "description": "Number of records per page, default to 100",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64",
+            "default": "100"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    },
+    "/transfers/history": {
+      "get": {
+        "summary": "Get transfer history",
+        "description": "Get transfer history.\n\n*Requires authentication.*",
+        "operationId": "getTransferHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetTransferHistoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "description": "if not empty, only return transfer history of this address. For normal users, this should be their own address. For admin users, this can be any address",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "filter by transfer type (WITHDRAW or DEPOSIT)",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAW"
+            ],
+            "default": "UNKNOWN"
+          },
+          {
+            "name": "block_time_from",
+            "description": "filter by block time (in seconds) from",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "block_time_to",
+            "description": "filter by block time (in seconds) to",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "page",
+            "description": "starts from 1, not 0; if not set, default to 1",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "description": "number of items per page; if not set, default to 100",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Transfers"
+        ]
+      }
+    },
+    "/transfers/withdraw": {
+      "post": {
+        "summary": "Withdraw USDC collateral to the wallet.",
+        "description": "Withdraw USDC collateral.",
+        "operationId": "withdraw",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiWithdrawCollateralResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiWithdrawCollateralRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Transfers"
+        ]
+      }
+    },
+    "/users/api-key": {
+      "get": {
+        "summary": "Returns the account API keys.",
+        "description": "Get all API keys.\n\n*Requires authentication.*",
+        "operationId": "getAPIKeys",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetAPIKeysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "summary": "Delete an API key.",
+        "description": "Delete existing api key.\n\n*Requires authentication.*",
+        "operationId": "deleteAPIKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiDeleteAPIKeyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "api_keys",
+            "description": "Api keys to be deleted.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      },
+      "post": {
+        "summary": "Create a new API key.",
+        "description": "Create new API key.\n\n*Requires authentication.*",
+        "operationId": "createAPIKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateAPIKeyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateAPIKeyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/register": {
+      "post": {
+        "summary": "Register a user signing wallet.",
+        "description": "Register a user's signing wallet. Due to a limitation on the number of active API keys, if the limit is reached, the request will fail",
+        "operationId": "registerUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRegisterUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiRegisterUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/signer": {
+      "delete": {
+        "summary": "De-register a user signing wallet.",
+        "description": "De-register a user signing wallet.\n\n*Requires authentication.*",
+        "operationId": "deregisterUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiDeregisterUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "signer",
+            "description": "Signing wallet address to be removed.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetChainConfigsResponseAddresses": {
+      "type": "object",
+      "properties": {
+        "usdc_contract": {
+          "type": "string",
+          "description": "usdc contract address, for withdraw request purpose"
+        }
+      }
+    },
+    "GetPortfolioDetailsResponseStats": {
+      "type": "object",
+      "properties": {
+        "order_stats": {
+          "$ref": "#/definitions/apiOrderStats"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/StatsProductOrderStat"
+          }
+        }
+      }
+    },
+    "StatsProductOrderStat": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "stat": {
+          "$ref": "#/definitions/apiOrderStats"
+        }
+      }
+    },
+    "apiAPIKey": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string"
+        },
+        "api_secret": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "expired_at": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "apiCancelAllOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "cancel_requested_orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiCancelAllOrdersResponseItem"
+          },
+          "description": "Order IDs that were cancel requested"
+        }
+      }
+    },
+    "apiCancelAllOrdersResponseItem": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "description": "Order ID to be canceled"
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Order nonce to be canceled"
+        }
+      }
+    },
+    "apiCancelOrderResponse": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "description": "The order ID that was canceled"
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "The order nonce that was canceled"
+        }
+      }
+    },
+    "apiCancelOrdersRequest": {
+      "type": "object",
+      "properties": {
+        "product_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Product IDs to be canceled"
+        },
+        "order_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Order IDs to be canceled. Maximum 100 items"
+        },
+        "nonces": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          },
+          "description": "Order nonces to be canceled. Maximum 100 items"
+        }
+      }
+    },
+    "apiCancelOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "cancel_requested_orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiCancelOrdersResponseItem"
+          },
+          "description": "Order IDs that were cancel requested. Not valid orders (done, already canceled requested, not found) will be ignored"
+        }
+      }
+    },
+    "apiCancelOrdersResponseItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "apiCreateAPIKeyRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A human-friendly name for you api key."
+        }
+      }
+    },
+    "apiCreateAPIKeyResponse": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/definitions/apiAPIKey"
+        }
+      }
+    },
+    "apiDeleteAPIKeyResponse": {
+      "type": "object",
+      "properties": {
+        "api_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Api keys are just deleted."
+        }
+      }
+    },
+    "apiDepositTestTokenResponse": {
+      "type": "object",
+      "properties": {
+        "tx_hash": {
+          "type": "string"
+        },
+        "block_number": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiDeregisterUserResponse": {
+      "type": "object"
+    },
+    "apiGetAPIKeysResponse": {
+      "type": "object",
+      "properties": {
+        "api_keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiAPIKey"
+          }
+        }
+      }
+    },
+    "apiGetAccountTradeHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "wallet_address": {
+          "type": "string"
+        },
+        "trades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiGetAccountTradeHistoryResponseTrade"
+          }
+        },
+        "page": {
+          "type": "string",
+          "format": "int64"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiGetAccountTradeHistoryResponseTrade": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string"
+        },
+        "side": {
+          "$ref": "#/definitions/sharedOrderSide"
+        },
+        "price": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "trading_fee": {
+          "type": "string"
+        },
+        "sequencer_fee": {
+          "type": "string"
+        },
+        "liquidity_indicator": {
+          "$ref": "#/definitions/apiLiquidityIndicator"
+        },
+        "type": {
+          "$ref": "#/definitions/sharedOrderType",
+          "default": "LIMIT",
+          "description": "Order type"
+        },
+        "time": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "funding_payment": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetBookResponse": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "book": {
+          "$ref": "#/definitions/sharedLevel2Book"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "gsn": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "apiGetChainConfigsResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name of the domain, for signing purpose"
+        },
+        "version": {
+          "type": "string",
+          "description": "version of the domain, for signing purpose"
+        },
+        "chain_id": {
+          "type": "string",
+          "description": "chain id of the domain, for signing purpose"
+        },
+        "verifying_contract": {
+          "type": "string",
+          "description": "verifying contract of the domain, for signing purpose"
+        },
+        "addresses": {
+          "$ref": "#/definitions/GetChainConfigsResponseAddresses"
+        }
+      }
+    },
+    "apiGetFundingRateResponse": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiGetFundingRateResponseItem"
+          }
+        }
+      }
+    },
+    "apiGetFundingRateResponseItem": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "string",
+          "format": "int64"
+        },
+        "rate": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetOpenOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiOrder"
+          }
+        }
+      }
+    },
+    "apiGetOrderHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiOrder"
+          }
+        }
+      }
+    },
+    "apiGetOrderResponse": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "$ref": "#/definitions/apiOrder"
+        }
+      }
+    },
+    "apiGetPortfolioDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "description": "User wallet address. E.g: 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+        },
+        "summary": {
+          "$ref": "#/definitions/sharedPortfolioSummary"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sharedPosition"
+          }
+        },
+        "stats": {
+          "$ref": "#/definitions/GetPortfolioDetailsResponseStats"
+        }
+      }
+    },
+    "apiGetProductsResponse": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiProduct"
+          }
+        }
+      }
+    },
+    "apiGetTransferHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiTransferItem"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "total_pages": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiLiquidityIndicator": {
+      "type": "string",
+      "enum": [
+        "MAKER",
+        "TAKER"
+      ],
+      "default": "MAKER",
+      "title": "LiquidityIndicator is the liquidity indicator of a trade"
+    },
+    "apiOrder": {
+      "type": "object",
+      "example": {
+        "id": "3c99584e-2ce7-473b-a029-4a158eea8ac8",
+        "price": "46593.6",
+        "size": "0.309",
+        "product_id": "BTC-PERP",
+        "side": "BUY",
+        "type": "LIMIT",
+        "time_in_force": "GTC",
+        "nonce": "484863880153441383762244769496746909964134256871079400030604",
+        "post_only": false,
+        "created_at": "2024-01-10T18:37:26.779139Z",
+        "cancel_reason": "",
+        "reject_reason": "",
+        "cancel_reject_reason": "",
+        "filled_fees": "7.1976606",
+        "filled_size": "0.309",
+        "status": "DONE",
+        "sender": "0x9fcf15c5dd519317bdaa446a622a9b8258cdd240",
+        "avg_price": "46586.8",
+        "cancel_requested": false,
+        "is_liquidation": false
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The order ID, should be an uuid"
+        },
+        "price": {
+          "type": "string",
+          "description": "The original price (in quote unit) of the order. Example 45000.1 (USDC)"
+        },
+        "size": {
+          "type": "string",
+          "description": "The original size (in base unit) of the order. Example 0.3 (BTC)"
+        },
+        "product_id": {
+          "type": "string",
+          "description": "The product of the order"
+        },
+        "side": {
+          "$ref": "#/definitions/sharedOrderSide",
+          "description": "The size of the order"
+        },
+        "type": {
+          "$ref": "#/definitions/sharedOrderType",
+          "description": "The type of the order"
+        },
+        "time_in_force": {
+          "$ref": "#/definitions/sharedOrderTimeInforce",
+          "description": "The TIF of the order"
+        },
+        "nonce": {
+          "type": "string",
+          "description": "The nonce of the order"
+        },
+        "post_only": {
+          "type": "boolean",
+          "default": "false",
+          "description": "Post-only means the order will only be placed as a maker order. If any part of the order results in taking liquidity, the order will be rejected and no part of it will execute."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "created at timestamp in nanosecond"
+        },
+        "cancel_reason": {
+          "type": "string",
+          "description": "the cancel reason (if exists). Possible values: user/admin/insufficient funds/etc"
+        },
+        "reject_reason": {
+          "type": "string",
+          "description": "the reason reason (if exists)"
+        },
+        "cancel_reject_reason": {
+          "type": "string",
+          "description": "the cancel reason reason (if exists)"
+        },
+        "filled_fees": {
+          "type": "string",
+          "description": "the total filled fees (in quote unit - USDC) of the order"
+        },
+        "filled_size": {
+          "type": "string",
+          "description": "the total filled size (in base unit - BTC) of the order"
+        },
+        "status": {
+          "$ref": "#/definitions/sharedOrderStatus",
+          "description": "the status of the order"
+        },
+        "sender": {
+          "type": "string",
+          "description": "the owner address of the order"
+        },
+        "avg_price": {
+          "type": "string",
+          "description": "the average price (in quote unit - USDC) of the order"
+        },
+        "cancel_requested": {
+          "type": "boolean",
+          "description": "indicates if the order is cancel requested"
+        },
+        "is_liquidation": {
+          "type": "boolean",
+          "description": "indicates if the order is a liquidation order"
+        },
+        "initial_margin": {
+          "type": "string",
+          "description": "Initial Margin Requirement for the order"
+        },
+        "reduce_only": {
+          "type": "boolean",
+          "description": "Indicates if the order is reduce-only"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "side",
+        "post_only",
+        "created_at",
+        "filled_fees",
+        "filled_size",
+        "status"
+      ]
+    },
+    "apiOrderStats": {
+      "type": "object",
+      "properties": {
+        "total_orders": {
+          "type": "string",
+          "format": "int64"
+        },
+        "total_done_orders": {
+          "type": "string",
+          "format": "int64"
+        },
+        "total_open_orders": {
+          "type": "string",
+          "format": "int64"
+        },
+        "total_pending_orders": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiPerpProductConfig": {
+      "type": "object",
+      "properties": {
+        "initial_margin": {
+          "type": "string"
+        },
+        "maintenance_margin": {
+          "type": "string"
+        },
+        "max_leverage": {
+          "type": "string"
+        }
+      }
+    },
+    "apiPostOrderRequest": {
+      "type": "object",
+      "example": {
+        "side": "BUY",
+        "product_id": "ETH-PERP",
+        "price": "100.00",
+        "size": "0.01",
+        "time_in_force": "GTC",
+        "nonce": "1234567890",
+        "signature": "0x1be72ed921abdb0113e467f46f61370df9fcfe37c303cd117324d33b3236e7434a8f05649b7ad0f951f6b3c675aead3c8ea911db26debda05907e60e40608fc31b"
+      },
+      "properties": {
+        "side": {
+          "$ref": "#/definitions/sharedOrderSide",
+          "description": "Side of the book to place order on. Either `BUY` or `SELL`",
+          "title": "side is an order side"
+        },
+        "product_index": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Product to place order on. (BTC-PERP=1, ETH-PERP=2, SOL-PERP=3)"
+        },
+        "price": {
+          "type": "string",
+          "description": "The max or min price limit to buy or sell at",
+          "title": "bsx.v1.shared.OrderStpFlag stp = 4 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {default: \"co\", description: \"Self-trade prevention flag. Either `co` (cancel older), `cn` (cancel newer) or `cb` (cancel both)\"}];"
+        },
+        "size": {
+          "type": "string",
+          "description": "Amount to buy or sell"
+        },
+        "time_in_force": {
+          "$ref": "#/definitions/sharedOrderTimeInforce",
+          "description": "How long the open order should be active for. Either `GTC` or `IOC` or `FOK`, default to `GTC`"
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "A randomly generated positive integer within the range of 0 (exclusive) to 2^63 (exclusive)can be used for ensuring uniqueness. Clients may opt to utilize a timestamp in nanoseconds as a nonce."
+        },
+        "post_only": {
+          "type": "boolean",
+          "description": "optional; default is false"
+        },
+        "signature": {
+          "type": "string",
+          "description": "The hash of the signed order payload"
+        },
+        "reduce_only": {
+          "type": "boolean",
+          "description": "optional; default is false"
+        }
+      },
+      "required": [
+        "side",
+        "product_index",
+        "signature",
+        "price",
+        "size",
+        "nonce"
+      ]
+    },
+    "apiPostOrderResponse": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "$ref": "#/definitions/apiOrder",
+          "description": "The order that was created"
+        }
+      }
+    },
+    "apiProduct": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "base_asset_symbol": {
+          "type": "string"
+        },
+        "quote_asset_symbol": {
+          "type": "string"
+        },
+        "underlying": {
+          "type": "string"
+        },
+        "base_increment": {
+          "type": "string"
+        },
+        "quote_increment": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "spot_product_config": {
+          "$ref": "#/definitions/apiSpotProductConfig"
+        },
+        "perpetual_product_config": {
+          "$ref": "#/definitions/apiPerpProductConfig"
+        },
+        "quote_volume_24h": {
+          "type": "string"
+        },
+        "change_24h": {
+          "type": "string"
+        },
+        "high_24h": {
+          "type": "string"
+        },
+        "low_24h": {
+          "type": "string"
+        },
+        "last_price": {
+          "type": "string"
+        },
+        "mark_price": {
+          "type": "string"
+        },
+        "index_price": {
+          "type": "string"
+        },
+        "max_position_size": {
+          "type": "string"
+        },
+        "open_interest": {
+          "type": "string"
+        },
+        "funding_interval": {
+          "type": "string"
+        },
+        "next_funding_rate": {
+          "type": "string"
+        },
+        "post_only": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiRegisterUserRequest": {
+      "type": "object",
+      "properties": {
+        "user_wallet": {
+          "type": "string",
+          "description": "User wallet address."
+        },
+        "signer": {
+          "type": "string",
+          "default": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+          "description": "Signing wallet address which will be used to sign orders."
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "A randomly generated positive integer within the range of 0 (exclusive) to 2^63 (exclusive)can be used for ensuring uniqueness. Clients may opt to utilize a timestamp in nanoseconds as a nonce."
+        },
+        "wallet_signature": {
+          "type": "string",
+          "description": "Signature of the user wallet address."
+        },
+        "signer_signature": {
+          "type": "string",
+          "description": "Signature of the signing wallet address."
+        },
+        "message": {
+          "type": "string",
+          "description": "A message intended for inclusion in data to be signed by the signing wallet address, with a focus on user-friendliness. Maximum 255 characters."
+        },
+        "name": {
+          "type": "string",
+          "description": "A friendly name for this api key. Maximum 255 characters."
+        }
+      },
+      "required": [
+        "user_wallet",
+        "signer",
+        "nonce",
+        "wallet_signature",
+        "signer_signature",
+        "message"
+      ]
+    },
+    "apiRegisterUserResponse": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string"
+        },
+        "api_secret": {
+          "type": "string"
+        },
+        "expired_at": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "apiSpotProductConfig": {
+      "type": "object"
+    },
+    "apiTransferItem": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "Address which mades this transfer"
+        },
+        "type": {
+          "$ref": "#/definitions/apiTransferItemType",
+          "description": "type: WITHDRAW or DEPOSIT"
+        },
+        "block_number": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "transaction_hash": {
+          "type": "string"
+        },
+        "token_address": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "string"
+        },
+        "block_time": {
+          "type": "string",
+          "format": "uint64",
+          "description": "block's timestamp in seconds"
+        },
+        "raw_log": {
+          "type": "string",
+          "title": "json encoded raw log from blockchain, might be useful for debugging"
+        },
+        "pending": {
+          "type": "boolean",
+          "description": "whether this transfer is pending"
+        }
+      }
+    },
+    "apiTransferItemType": {
+      "type": "string",
+      "enum": [
+        "DEPOSIT",
+        "WITHDRAW"
+      ],
+      "default": "UNKNOWN"
+    },
+    "apiWithdrawCollateralRequest": {
+      "type": "object",
+      "properties": {
+        "sender": {
+          "type": "string",
+          "description": "User wallet address."
+        },
+        "token": {
+          "type": "string",
+          "description": "USDC token address. For testnet, use [TBD]. For mainnet, use 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+        },
+        "amount": {
+          "type": "string",
+          "description": "USDC amount to withdraw."
+        },
+        "nonce": {
+          "type": "string",
+          "format": "uint64",
+          "description": "A randomly generated positive integer within the range of 0 (exclusive) to 2^63 (exclusive)can be used for ensuring uniqueness. Clients may opt to utilize a timestamp in nanoseconds as a nonce."
+        },
+        "signature": {
+          "type": "string",
+          "description": "Signature of the withdrawal request."
+        }
+      }
+    },
+    "apiWithdrawCollateralResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "description": "Withdrawal request success."
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "sharedLevel2Book": {
+      "type": "object",
+      "properties": {
+        "asks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sharedPriceLevel"
+          }
+        },
+        "bids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sharedPriceLevel"
+          }
+        }
+      }
+    },
+    "sharedOrderSide": {
+      "type": "string",
+      "enum": [
+        "BUY",
+        "SELL"
+      ],
+      "default": "BUY"
+    },
+    "sharedOrderStatus": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "OPEN",
+        "DONE"
+      ],
+      "default": "PENDING"
+    },
+    "sharedOrderTimeInforce": {
+      "type": "string",
+      "enum": [
+        "GTC",
+        "IOC",
+        "FOK"
+      ],
+      "default": "GTC",
+      "title": "- GTC: Good til canceled\n - IOC: Immediate or cancel\n - FOK: Fill or kill"
+    },
+    "sharedOrderType": {
+      "type": "string",
+      "enum": [
+        "LIMIT",
+        "MARKET",
+        "STOP"
+      ],
+      "default": "LIMIT"
+    },
+    "sharedPortfolioSummary": {
+      "type": "object",
+      "properties": {
+        "margin_usage": {
+          "type": "string"
+        },
+        "account_leverage": {
+          "type": "string"
+        },
+        "in_liquidation": {
+          "type": "boolean"
+        },
+        "free_collateral": {
+          "type": "string"
+        },
+        "total_account_value": {
+          "type": "string"
+        },
+        "total_notional": {
+          "type": "string"
+        },
+        "usdc_balance": {
+          "type": "string"
+        },
+        "unsettled_usdc": {
+          "type": "string"
+        },
+        "realized_pnl": {
+          "type": "string"
+        },
+        "total_intial_margin": {
+          "type": "string"
+        },
+        "total_maintenance_margin": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedPosition": {
+      "type": "object",
+      "properties": {
+        "product_index": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "net_size": {
+          "type": "string"
+        },
+        "avg_entry_price": {
+          "type": "string"
+        },
+        "initial_margin_requirement": {
+          "type": "string"
+        },
+        "maintenance_margin_requirement": {
+          "type": "string"
+        },
+        "liquidation_price": {
+          "type": "string"
+        },
+        "unrealized_pnl": {
+          "type": "string"
+        },
+        "mark_price": {
+          "type": "string"
+        },
+        "leverage": {
+          "type": "string"
+        },
+        "unsettled_funding": {
+          "type": "string"
+        },
+        "funding_index": {
+          "type": "string"
+        },
+        "quote_balance": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedPriceLevel": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "BSX-KEY",
+      "in": "header"
+    },
+    "ApiKeyAuth2": {
+      "type": "apiKey",
+      "name": "BSX-SECRET",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "ApiKeyAuth2": []
+    }
+  ]
+}

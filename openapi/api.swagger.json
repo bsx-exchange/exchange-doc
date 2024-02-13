@@ -355,10 +355,10 @@
         ]
       }
     },
-    "/orders/{order_id}": {
+    "/orders/{order}": {
       "get": {
         "summary": "Get an order",
-        "description": "Retrieve a single order by `{id}`.\n\n*Requires authentication.*",
+        "description": "Retrieve a single order by `{id}` or `{nonce}`.\n\n*Requires authentication.*",
         "operationId": "getOrder",
         "responses": {
           "200": {
@@ -376,8 +376,8 @@
         },
         "parameters": [
           {
-            "name": "order_id",
-            "description": "`order_id` is the assigned ID of the order.",
+            "name": "order",
+            "description": "can be order_id (an uuid) or order nonce (an positive int64)",
             "in": "path",
             "required": true,
             "type": "string"

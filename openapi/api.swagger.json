@@ -1604,6 +1604,10 @@
         "next_funding_rate": {
           "type": "string"
         },
+        "next_funding_time": {
+          "type": "string",
+          "format": "int64"
+        },
         "post_only": {
           "type": "boolean"
         }

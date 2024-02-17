@@ -26,6 +26,9 @@
     },
     {
       "name": "PointService"
+    },
+    {
+      "name": "ReferralService"
     }
   ],
   "host": "api.testnet.bsx.exchange",

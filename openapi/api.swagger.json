@@ -668,7 +668,7 @@
     "/transfers/withdraw": {
       "post": {
         "summary": "Withdraw USDC collateral to the wallet.",
-        "description": "Withdraw USDC collateral.",
+        "description": "Withdraw USDC collateral.\n\n*Requires authentication.*",
         "operationId": "withdraw",
         "responses": {
           "200": {
@@ -1742,7 +1742,7 @@
         },
         "amount": {
           "type": "string",
-          "title": "USDC amount to withdraw"
+          "description": "USDC amount to withdraw. Must be greater or equal to 2 usdc."
         },
         "nonce": {
           "type": "string",

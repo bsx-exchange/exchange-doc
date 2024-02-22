@@ -31,7 +31,7 @@
       "name": "ReferralService"
     }
   ],
-  "host": "api.testnet.bsx.exchange",
+  "host": "api.bsx.exchange",
   "schemes": [
     "https"
   ],

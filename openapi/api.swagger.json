@@ -169,7 +169,7 @@
             "name": "product_id",
             "description": "Filter results by a product_id",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -201,7 +201,7 @@
           },
           {
             "name": "statuses",
-            "description": "bsx.v1.shared.MarketType market_type = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {\n   description: \"Market type. SPOT or PERPS\"\n   default: \"SPOT\"\n }];\n\nFilter results by order status.",
+            "description": "Filter results by order status.",
             "in": "query",
             "required": false,
             "type": "array",

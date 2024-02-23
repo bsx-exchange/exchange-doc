@@ -668,7 +668,7 @@
     "/transfers/withdraw": {
       "post": {
         "summary": "Withdraw USDC collateral to the wallet.",
-        "description": "Withdraw USDC collateral.\n\n*Requires authentication.*",
+        "description": "Withdraw USDC collateral.",
         "operationId": "withdraw",
         "responses": {
           "200": {
@@ -1738,11 +1738,13 @@
         },
         "token": {
           "type": "string",
-          "title": "USDC token address. For testnet, use `0x26dF8d79C4FaCa88d0212f0bd7C4A4d1e8955F0e. For mainnet, use `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` https://www.circle.com/en/multi-chain-usdc/base"
+          "default": "0x26dF8d79C4FaCa88d0212f0bd7C4A4d1e8955F0e",
+          "description": "Token address of the collateral. At the moment we only support USDC. For testnet, use `0x26dF8d79C4FaCa88d0212f0bd7C4A4d1e8955F0e. For mainnet, use `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`."
         },
         "amount": {
           "type": "string",
-          "description": "USDC amount to withdraw. Must be greater or equal to 2 usdc."
+          "default": "0",
+          "description": "Token amount to withdraw. For USDC, the minimum amount is 2 USDC. We currently only allow withdraw up to min(settled_usdc_balance, free_collateral)."
         },
         "nonce": {
           "type": "string",
@@ -1751,9 +1753,16 @@
         },
         "signature": {
           "type": "string",
-          "title": "Signature of the withdrawal request, signed by the user wallet address"
+          "description": "Signature of the withdrawal request, signed by the user wallet address"
         }
-      }
+      },
+      "required": [
+        "sender",
+        "token",
+        "amount",
+        "nonce",
+        "signature"
+      ]
     },
     "apiWithdrawCollateralResponse": {
       "type": "object",

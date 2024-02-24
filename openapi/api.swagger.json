@@ -1891,6 +1891,9 @@
         },
         "total_maintenance_margin": {
           "type": "string"
+        },
+        "has_pending_withdrawal": {
+          "type": "boolean"
         }
       }
     },

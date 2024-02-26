@@ -868,32 +868,6 @@
         }
       }
     },
-    "GetPortfolioDetailsResponseStats": {
-      "type": "object",
-      "properties": {
-        "order_stats": {
-          "$ref": "#/definitions/apiOrderStats"
-        },
-        "products": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/StatsProductOrderStat"
-          }
-        }
-      }
-    },
-    "StatsProductOrderStat": {
-      "type": "object",
-      "properties": {
-        "product_id": {
-          "type": "string"
-        },
-        "stat": {
-          "$ref": "#/definitions/apiOrderStats"
-        }
-      }
-    },
     "apiAPIKey": {
       "type": "object",
       "properties": {
@@ -1256,9 +1230,6 @@
             "type": "object",
             "$ref": "#/definitions/sharedPosition"
           }
-        },
-        "stats": {
-          "$ref": "#/definitions/GetPortfolioDetailsResponseStats"
         }
       }
     },
@@ -1433,27 +1404,6 @@
         "filled_size",
         "status"
       ]
-    },
-    "apiOrderStats": {
-      "type": "object",
-      "properties": {
-        "total_orders": {
-          "type": "string",
-          "format": "int64"
-        },
-        "total_done_orders": {
-          "type": "string",
-          "format": "int64"
-        },
-        "total_open_orders": {
-          "type": "string",
-          "format": "int64"
-        },
-        "total_pending_orders": {
-          "type": "string",
-          "format": "int64"
-        }
-      }
     },
     "apiPerpProductConfig": {
       "type": "object",

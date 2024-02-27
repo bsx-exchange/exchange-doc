@@ -214,6 +214,14 @@
               ]
             },
             "collectionFormat": "multi"
+          },
+          {
+            "name": "sorted_by",
+            "description": "Sort the results using the given field. Supported values :`created_at` (sort by created_at asc), `-created_at` (sort by created_at desc)",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "-created_at"
           }
         ],
         "tags": [

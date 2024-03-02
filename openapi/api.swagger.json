@@ -835,7 +835,7 @@
     "/users/signer": {
       "delete": {
         "summary": "De-register a user signing wallet.",
-        "description": "De-register a user signing wallet.\n\n*This API is deprecated. Please use DeleteAPIKey.*",
+        "description": "De-register a user signing wallet.\n\n*Requires authentication.*",
         "operationId": "deregisterUser",
         "responses": {
           "200": {

@@ -1844,7 +1844,7 @@
         "realized_pnl": {
           "type": "string"
         },
-        "total_intial_margin": {
+        "total_initial_margin": {
           "type": "string"
         },
         "total_maintenance_margin": {

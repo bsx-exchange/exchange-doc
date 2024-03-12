@@ -1341,6 +1341,7 @@
         },
         "nonce": {
           "type": "string",
+          "format": "uint64",
           "description": "The nonce of the order"
         },
         "post_only": {

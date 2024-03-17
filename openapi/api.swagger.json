@@ -1274,6 +1274,14 @@
         "limit": {
           "type": "string",
           "format": "int64"
+        },
+        "total_deposit": {
+          "type": "string",
+          "title": "total deposit amount in usdc"
+        },
+        "total_withdraw": {
+          "type": "string",
+          "title": "total withdraw amount in usdc"
         }
       }
     },

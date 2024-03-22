@@ -888,6 +888,12 @@
         "name": {
           "type": "string"
         },
+        "sender": {
+          "type": "string"
+        },
+        "signer": {
+          "type": "string"
+        },
         "created_at": {
           "type": "string",
           "format": "uint64"

@@ -1069,7 +1069,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/apiGetAccountTradeHistoryResponseTrade"
+            "$ref": "#/definitions/v1apiTrade"
           }
         },
         "page": {
@@ -1079,50 +1079,6 @@
         "total": {
           "type": "string",
           "format": "int64"
-        }
-      }
-    },
-    "apiGetAccountTradeHistoryResponseTrade": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "product_id": {
-          "type": "string"
-        },
-        "order_id": {
-          "type": "string"
-        },
-        "side": {
-          "$ref": "#/definitions/sharedOrderSide"
-        },
-        "price": {
-          "type": "string"
-        },
-        "size": {
-          "type": "string"
-        },
-        "trading_fee": {
-          "type": "string"
-        },
-        "sequencer_fee": {
-          "type": "string"
-        },
-        "liquidity_indicator": {
-          "$ref": "#/definitions/apiLiquidityIndicator"
-        },
-        "type": {
-          "$ref": "#/definitions/sharedOrderType",
-          "default": "LIMIT",
-          "description": "Order type"
-        },
-        "time": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "funding_payment": {
-          "type": "string"
         }
       }
     },
@@ -1922,6 +1878,50 @@
           "type": "string"
         },
         "size": {
+          "type": "string"
+        }
+      }
+    },
+    "v1apiTrade": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string"
+        },
+        "side": {
+          "$ref": "#/definitions/sharedOrderSide"
+        },
+        "price": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "trading_fee": {
+          "type": "string"
+        },
+        "sequencer_fee": {
+          "type": "string"
+        },
+        "liquidity_indicator": {
+          "$ref": "#/definitions/apiLiquidityIndicator"
+        },
+        "type": {
+          "$ref": "#/definitions/sharedOrderType",
+          "default": "LIMIT",
+          "description": "Order type"
+        },
+        "time": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "funding_payment": {
           "type": "string"
         }
       }

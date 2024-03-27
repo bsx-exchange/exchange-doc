@@ -1436,7 +1436,7 @@
         "nonce": {
           "type": "string",
           "format": "uint64",
-          "description": "A randomly generated positive integer within the range of 0 (exclusive) to 2^63 (exclusive)can be used for ensuring uniqueness. Clients may opt to utilize a timestamp in nanoseconds as a nonce."
+          "description": "A positive integer within the range of [current_timestamp - 10 minutes, current_timestamp) in nanosecond unit. Using current timestamp in nanoseconds as a nonce is highly recommended."
         },
         "post_only": {
           "type": "boolean",
